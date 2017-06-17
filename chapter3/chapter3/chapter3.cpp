@@ -70,6 +70,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT mesg, WPARAM wParam, LPARAM lParam) {
 	{
 	case WM_LBUTTONDOWN:
 		MessageBox(hWnd, L"안녕하세요", L"알림", MB_OK);
+		SetWindowText(hWnd, L"Black");
+
+		HWND hNote;
+		hNote = FindWindow(NULL, L"제목 없음 - 메모장");
+		HDC hdc;
+		hdc = GetDC(hNote);
+		TextOut(hdc, 0, 0, L"Hello", 5);
+		ReleaseDC(hNote, hdc);
+
+
 		break;
 	case WM_DESTROY: 
 		PostQuitMessage(0);
@@ -86,6 +96,12 @@ LRESULT CALLBACK WndProc2(HWND hWnd, UINT mesg, WPARAM wParam, LPARAM lParam) {
 	{
 	case WM_LBUTTONDOWN:
 		MessageBox(hWnd, L"저리가세요", L"알림", MB_OK);
+		HWND hNote;
+		hNote = (HWND)0x000603CC;
+		HDC hdc;
+		hdc = GetDC(hNote);
+		TextOut(hdc, 0, 0, L"Hello", 5);
+		ReleaseDC(hNote, hdc);
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
