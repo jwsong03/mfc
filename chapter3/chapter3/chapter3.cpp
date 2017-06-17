@@ -1,10 +1,10 @@
 #include <Windows.h>
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-HWND _hWnd2;
+LRESULT CALLBACK WndProc2(HWND, UINT, WPARAM, LPARAM);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
-	HWND hWnd;
+	HWND hWnd, hWnd2;
 	MSG msg;
 	WNDCLASS WndClass;
 	LPCWSTR szAppName = L"Hello";
@@ -22,6 +22,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	if (!RegisterClass(&WndClass)) return NULL;
 
+	WndClass.lpfnWndProc = WndProc2;
+	WndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	WndClass.lpszClassName = L"WND2";
+	
+	if (!RegisterClass(&WndClass)) return NULL;
+
+
 	hWnd = CreateWindow(
 		szAppName,
 		L"Hello",
@@ -36,8 +43,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	UpdateWindow(hWnd);
 
 
-	_hWnd2 = CreateWindow(
-		szAppName,
+	hWnd2 = CreateWindow(
+		L"WND2",
 		L"World",
 		WS_OVERLAPPEDWINDOW,
 		320, 0, 320, 240,
@@ -46,8 +53,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		NULL
 	);
 
-	ShowWindow(_hWnd2, nShowCmd);
-	UpdateWindow(_hWnd2);
+	ShowWindow(hWnd2, nShowCmd);
+	UpdateWindow(hWnd2);
 
 	while (GetMessage(&msg, NULL, 0,0))
 	{
@@ -62,7 +69,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT mesg, WPARAM wParam, LPARAM lParam) {
 	switch (mesg)
 	{
 	case WM_LBUTTONDOWN:
-		MessageBox(hWnd, L"왼쪽 버튼 눌림", L"알림", MB_OK);
+		MessageBox(hWnd, L"안녕하세요", L"알림", MB_OK);
+		break;
+	case WM_DESTROY: 
+		PostQuitMessage(0);
+		return FALSE;
+	default:
+		break;
+	}
+
+	return DefWindowProc(hWnd, mesg, wParam, lParam);
+}
+
+LRESULT CALLBACK WndProc2(HWND hWnd, UINT mesg, WPARAM wParam, LPARAM lParam) {
+	switch (mesg)
+	{
+	case WM_LBUTTONDOWN:
+		MessageBox(hWnd, L"저리가세요", L"알림", MB_OK);
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
