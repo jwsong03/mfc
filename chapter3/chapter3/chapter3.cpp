@@ -2,9 +2,8 @@
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WndProc2(HWND, UINT, WPARAM, LPARAM);
-HWND hWnd2;
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
-	HWND hWnd;
+	HWND hWnd, hWnd2;
 	MSG msg;
 	WNDCLASS WndClass;
 	LPCWSTR szAppName = L"Hello";
@@ -42,13 +41,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ShowWindow(hWnd, nShowCmd);
 	UpdateWindow(hWnd);
 
-
+	
 	hWnd2 = CreateWindow(
 		L"WND2",
 		L"World",
 		WS_OVERLAPPEDWINDOW,
 		320, 0, 320, 240,
-		NULL, NULL,
+		hWnd, NULL,
 		hInstance,
 		NULL
 	);
@@ -83,7 +82,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT mesg, WPARAM wParam, LPARAM lParam) {
 		break;
 	case WM_DESTROY: 
 		MessageBox(hWnd, L"나죽네", L"", MB_OK);
-		DestroyWindow(hWnd2);
 		PostQuitMessage(0);	//프르그램 종료 메시지 포스팅(WM_DESTORY)
 		return FALSE;
 	default:
@@ -107,6 +105,7 @@ LRESULT CALLBACK WndProc2(HWND hWnd, UINT mesg, WPARAM wParam, LPARAM lParam) {
 		break;
 	case WM_DESTROY:
 		MessageBox(hWnd, L"나죽어?", L"", MB_OK);
+		//PostQuitMessage(0);	//프르그램 종료 메시지 포스팅(WM_DESTORY)
 		return FALSE;
 	default:
 		break;
