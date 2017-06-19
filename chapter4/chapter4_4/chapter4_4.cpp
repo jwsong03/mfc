@@ -1,5 +1,6 @@
 #include <Windows.h>
 
+#define WM_MYMOVE WM_USER+1
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WndProc2(HWND, UINT, WPARAM, LPARAM);
 
@@ -51,6 +52,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT mesg, WPARAM wParam, LPARAM lParam) {
 			320, 0, 320, 240, hWnd,
 			NULL, _hInstance, NULL); //PARENT hWnd
 		break;
+	case WM_MOUSEMOVE:
+		int x, y;
+		x = LOWORD(lParam);
+		y = HIWORD(lParam);
+		lParam = (x << 16) | y;
+		SendMessage(hWnd2, WM_MYMOVE, wParam, lParam);
+		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return FALSE;
@@ -61,15 +69,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT mesg, WPARAM wParam, LPARAM lParam) {
 LRESULT CALLBACK WndProc2(HWND hWnd, UINT mesg, WPARAM wParam, LPARAM lParam) {
 	HWND hParentWnd;
 	switch (mesg) {
-	case WM_MOUSEMOVE:
+	case WM_MYMOVE:
 		WORD x, y;
 		HDC hdc;
-		hParentWnd = (HWND)GetWindowLong(hWnd, GWL_HWNDPARENT);
 		x = LOWORD(lParam);
 		y = HIWORD(lParam);
-		hdc = GetDC(hParentWnd);
+		hdc = GetDC(hWnd);
 		TextOut(hdc, x, y, L"*", 1);
-		ReleaseDC(hParentWnd, hdc);
+		ReleaseDC(hWnd, hdc);
 		break;
 	}
 	return DefWindowProc(hWnd, mesg, wParam, lParam);
